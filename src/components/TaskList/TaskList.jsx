@@ -3,11 +3,16 @@ import TaskItem from "./TaskItem";
 import { useTasks } from "../../store/taskContext";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import { Empty } from "antd";
 
 dayjs.extend(isBetween);
 
-const TaskList = ({ filterText, dateFilter, sortByPriority, categoryFilter, tagFilter }) => {
+const TaskList = ({
+  filterText,
+  dateFilter,
+  sortByPriority,
+  categoryFilter,
+  tagFilter,
+}) => {
   const { tasks } = useTasks();
 
   let filteredTasks = tasks.filter((task) =>
@@ -26,7 +31,9 @@ const TaskList = ({ filterText, dateFilter, sortByPriority, categoryFilter, tagF
   }
 
   if (categoryFilter !== "전체") {
-    filteredTasks = filteredTasks.filter((task) => task.category === categoryFilter);
+    filteredTasks = filteredTasks.filter(
+      (task) => task.category === categoryFilter
+    );
   }
 
   if (tagFilter) {
@@ -44,11 +51,13 @@ const TaskList = ({ filterText, dateFilter, sortByPriority, categoryFilter, tagF
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div className="flex flex-col gap-4 mt-6">
       {filteredTasks.length > 0 ? (
         filteredTasks.map((task) => <TaskItem key={task.id} task={task} />)
       ) : (
-        <Empty description="일정이 없습니다." />
+        <div className="text-center text-gray-500 py-12 rounded-lg border border-dashed bg-gray-50">
+          현재 조건에 해당하는 일정이 없습니다.
+        </div>
       )}
     </div>
   );

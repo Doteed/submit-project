@@ -1,34 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, Typography, Layout } from "antd";
-
-const { Title } = Typography;
-const { Header: AntHeader } = Layout;
 
 const PageHeader = ({ title }) => {
   const navigate = useNavigate();
 
   return (
-    <AntHeader style={{ backgroundColor: "#eaeaea", padding: "0 24px" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          height: "100%",
-        }}
-      >
-        <Button
-          icon={<ArrowLeftOutlined />}
-          type="text"
+    <header className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center">
+        <button
           onClick={() => navigate(-1)}
-          style={{ marginRight: 16 }}
-        />
-        <Title level={4} style={{ margin: 0 }}>
-          {title}
-        </Title>
+          className="text-gray-600 hover:text-black mr-4"
+          aria-label="뒤로가기"
+        >
+          <ArrowLeftOutlined style={{ fontSize: "20px" }} />
+        </button>
+        <h1 className="text-xl font-semibold text-gray-800 tracking-tight">{title}</h1>
       </div>
-    </AntHeader>
+    </header>
   );
 };
 

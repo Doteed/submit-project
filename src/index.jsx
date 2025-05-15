@@ -6,6 +6,7 @@ import AddEditPage from "./pages/AddEditPage";
 import CalendarPage from "./pages/CalendarPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import MainPage from "./pages/MainPage";
 import { TaskProvider } from "./store/taskContext";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
@@ -32,7 +33,8 @@ const PrivateRoute = ({ element }) => {
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<PrivateRoute element={<HomePage />} />} />
+      <Route path="/" element={<MainPage />} />
+      <Route path="/home" element={<PrivateRoute element={<HomePage />} />} />
       <Route path="/add" element={<PrivateRoute element={<AddEditPage />} />} />
       <Route path="/edit/:id" element={<PrivateRoute element={<AddEditPage />} />} />
       <Route path="/calendar" element={<PrivateRoute element={<CalendarPage />} />} />

@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
-import { Layout, Typography, Space, Button } from "antd";
-
-const { Header: AntHeader } = Layout;
-const { Title, Text } = Typography;
 
 const Header = () => {
   const navigate = useNavigate();
@@ -27,18 +23,39 @@ const Header = () => {
     }
   };
 
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
-    <AntHeader style={{ backgroundColor: "#eaeaea", padding: "0 24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Space>
-          <Title level={4} style={{ margin: 0 }}>나의 일정 관리</Title>
-          {userEmail && <Text type="secondary">{userEmail}</Text>}
-        </Space>
-        <Button type="link" danger onClick={handleLogout}>
-          로그아웃
-        </Button>
+    <header className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">스마트 일정관리</h1>
+          {userEmail && (
+            <p className="text-sm text-gray-500 mt-1">{userEmail}</p>
+          )}
+        </div>
+
+        <div>
+          {userEmail ? (
+            <button
+              onClick={handleLogout}
+              className="text-sm text-red-600 hover:text-red-700 font-medium transition"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium transition"
+            >
+              로그인
+            </button>
+          )}
+        </div>
       </div>
-    </AntHeader>
+    </header>
   );
 };
 

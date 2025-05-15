@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header/Header";
 import FilterBar from "../components/FilterBar/FilterBar";
 import TaskList from "../components/TaskList/TaskList";
-import { PlusOutlined, CalendarOutlined  } from "@ant-design/icons";
+import { PlusOutlined, CalendarOutlined } from "@ant-design/icons";
 import FloatingButton from "../components/FloatingButton/FloatingButton";
 import { useNavigate } from "react-router-dom";
 import { useTasks } from "../store/taskContext";
 import dayjs from "dayjs";
-import { Layout, Input, Typography, Card, List, FloatButton } from "antd";
-
-const { Content } = Layout;
-const { Title } = Typography;
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -29,21 +25,21 @@ const HomePage = () => {
   }, [tasks]);
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+    <div className="min-h-screen bg-gray-100">
       <Header />
-      <Content style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
+
+      <main className="max-w-3xl mx-auto px-4 py-6">
         {todayTasks.length > 0 && (
-          <Card
-            style={{ marginBottom: 24, backgroundColor: "#fff8db", borderColor: "#ffe58f" }}
-            size="small"
-          >
-            <Title level={4} style={{ margin: 0 }}>오늘의 일정 ({todayTasks.length})</Title>
-            <List
-              size="small"
-              dataSource={todayTasks}
-              renderItem={(task) => <List.Item>{task.title}</List.Item>}
-            />
-          </Card>
+          <div className="bg-yellow-100 border border-yellow-300 rounded-md p-4 mb-6 shadow-sm">
+            <h2 className="text-lg font-bold text-gray-800 mb-2">
+              오늘의 일정 ({todayTasks.length})
+            </h2>
+            <ul className="list-disc pl-5 text-gray-700 text-sm space-y-1">
+              {todayTasks.map((task) => (
+                <li key={task.id}>{task.title}</li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <FilterBar
@@ -59,11 +55,12 @@ const HomePage = () => {
           setTagFilter={setTagFilter}
         />
 
-        <div style={{ marginBottom: 16 }}>
-          <Input
+        <div className="mb-4">
+          <input
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
             placeholder="태그로 필터링 (예: #업무)"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -74,14 +71,22 @@ const HomePage = () => {
           categoryFilter={categoryFilter}
           tagFilter={tagFilter}
         />
-      </Content>
+      </main>
 
-      <FloatButton.Group shape="circle">
-        <FloatingButton icon={<PlusOutlined />} type="primary" onClick={() => navigate("/add")} tooltip="일정 추가" />
-        <FloatingButton icon={<CalendarOutlined />} onClick={() => navigate("/calendar")} tooltip="캘린더 보기" />
-      </FloatButton.Group>
-
-    </Layout>
+      <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-50">
+        <FloatingButton
+          icon={<PlusOutlined style={{ fontSize: 20 }} />}
+          type="primary"
+          onClick={() => navigate("/add")}
+          tooltip="일정 추가"
+        />
+        <FloatingButton
+          icon={<CalendarOutlined style={{ fontSize: 20 }} />}
+          onClick={() => navigate("/calendar")}
+          tooltip="캘린더 보기"
+        />
+      </div>
+    </div>
   );
 };
 

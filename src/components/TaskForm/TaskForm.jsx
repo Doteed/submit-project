@@ -2,17 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTasks } from "../../store/taskContext";
 import dayjs from "dayjs";
-import {
-  Form,
-  Input,
-  DatePicker,
-  TimePicker,
-  Select,
-  Button,
-  Card,
-} from "antd";
-
-const { Option } = Select;
 
 const TaskForm = () => {
   const { addTask, updateTask, tasks } = useTasks();
@@ -24,8 +13,8 @@ const TaskForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    date: dayjs(),
-    time: dayjs("12:00", "HH:mm"),
+    date: dayjs().format("YYYY-MM-DD"),
+    time: "12:00",
     priority: "normal",
     category: "업무",
     tags: [],
@@ -35,17 +24,22 @@ const TaskForm = () => {
     if (isEdit && existingTask) {
       setFormData({
         ...existingTask,
-        date: dayjs(existingTask.date),
-        time: dayjs(existingTask.time, "HH:mm"),
+        date: existingTask.date,
+        time: existingTask.time,
       });
     }
   }, [isEdit, existingTask]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.title || !formData.date || !formData.time) {
+      alert("필수 항목을 입력해주세요.");
+      return;
+    }
+
     const formattedData = {
       ...formData,
-      date: formData.date.format("YYYY-MM-DD"),
-      time: formData.time.format("HH:mm"),
     };
 
     if (isEdit) {
@@ -57,96 +51,109 @@ const TaskForm = () => {
   };
 
   return (
-    <Card>
-      <Form layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="제목" required>
-          <Input
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl border border-gray-200">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {isEdit ? "일정 수정" : "일정 추가"}
+      </h2>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">제목 *</label>
+          <input
+            type="text"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.title}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, title: e.target.value }))
-            }
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            required
           />
-        </Form.Item>
+        </div>
 
-        <Form.Item label="설명">
-          <Input.TextArea
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">설명</label>
+          <textarea
             rows={3}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           />
-        </Form.Item>
+        </div>
 
-        <Form.Item label="날짜" required>
-          <DatePicker
-            style={{ width: "100%" }}
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">날짜 *</label>
+          <input
+            type="date"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.date}
-            onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            required
           />
-        </Form.Item>
+        </div>
 
-        <Form.Item label="시간" required>
-          <TimePicker
-            style={{ width: "100%" }}
-            format="HH:mm"
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">시간 *</label>
+          <input
+            type="time"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
             value={formData.time}
-            onChange={(time) => setFormData((prev) => ({ ...prev, time }))}
+            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+            required
           />
-        </Form.Item>
+        </div>
 
-        <Form.Item label="우선순위">
-          <Select
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">우선순위</label>
+          <select
             value={formData.priority}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, priority: value }))
-            }
+            onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
           >
-            <Option value="high">높음</Option>
-            <Option value="normal">보통</Option>
-            <Option value="low">낮음</Option>
-          </Select>
-        </Form.Item>
+            <option value="high">높음</option>
+            <option value="normal">보통</option>
+            <option value="low">낮음</option>
+          </select>
+        </div>
 
-        <Form.Item label="카테고리">
-          <Select
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">카테고리</label>
+          <select
             value={formData.category}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, category: value }))
-            }
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
           >
-            <Option value="업무">업무</Option>
-            <Option value="개인">개인</Option>
-            <Option value="운동">운동</Option>
-          </Select>
-        </Form.Item>
+            <option value="업무">업무</option>
+            <option value="개인">개인</option>
+            <option value="운동">운동</option>
+          </select>
+        </div>
 
-        <Form.Item label="태그(입력하여 추가가능)">
-          <Select
-            mode="tags"
-            style={{ width: "100%" }}
-            placeholder="태그 입력 (예: 업무, 중요)"
-            value={formData.tags}
-            onChange={(value) =>
-              setFormData((prev) => ({ ...prev, tags: value }))
+        <div>
+          <label className="block font-medium text-gray-700 mb-1">
+            태그 (쉼표로 구분하여 입력)
+          </label>
+          <input
+            type="text"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="예: 중요, 긴급"
+            value={formData.tags.join(", ")}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                tags: e.target.value.split(",").map((tag) => tag.trim()),
+              })
             }
-            options={[
-              { value: "업무" },
-              { value: "중요" },
-              { value: "운동" },
-              { value: "개인" },
-              { value: "긴급" },
-            ]}
           />
-        </Form.Item>
+        </div>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+        <div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md transition"
+          >
             {isEdit ? "일정 수정" : "일정 추가"}
-          </Button>
-        </Form.Item>
-      </Form>
-    </Card>
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
